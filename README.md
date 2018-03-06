@@ -9,10 +9,12 @@ It featured felxibility in determining imprinting threshold and are designed to 
 
 Example in bash script
 
-samtools view -b Cr48sort.bam | genomeCoverageBed -ibam crub.chrom.sizes -d > 48cov.csv
-genomeCoverageBed -ibam Cr48sortstamp.bam -g crub.chrom.sizes -d > 48cov.txt
-samtools view -b Cr75sort.bam | genomeCoverageBed -ibam crub.chrom.sizes -d > 75cov.csv
-genomeCoverageBed -ibam Cr75sortstamp.bam -g crub.chrom.sizes -d > 75cov.txt
+samtools view -b A.bam | genomeCoverageBed -ibam crub.chrom.sizes -d > Acov.csv
+
+or
+
+genomeCoverageBed -ibam A.bam -g crub.chrom.sizes -d > Acov.txt
+
 cat Cr48snp.vcf | vcf-to-tab > cr48filtab.vcf
 cat Cr75snp.vcf | vcf-to-tab > cr75filtab.vcf
 
