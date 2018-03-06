@@ -5,6 +5,12 @@ It featured felxibility in determining imprinting threshold and are designed to 
 
 # Quick Guide 
 
+usage:
+
+	./imprintia.sh Abamfile1.bam Bbamfile2.bam AxB.bam BxA.bam reference.fasta annotation.gff3
+	
+# For Manual Step by Step Use
+
 ## SNP Calling from parental genome
 
 Example in bash script
