@@ -5,7 +5,7 @@ It featured felxibility in determining imprinting threshold and are designed to 
 
 # Quick Guide 
 
-# SNP Calling from parental genome
+## SNP Calling from parental genome
 
 Example in bash script
 
@@ -16,16 +16,17 @@ genomeCoverageBed -ibam Cr75sortstamp.bam -g crub.chrom.sizes -d > 75cov.txt
 cat Cr48snp.vcf | vcf-to-tab > cr48filtab.vcf
 cat Cr75snp.vcf | vcf-to-tab > cr75filtab.vcf
 
-After SNP calling from parental genome was done, run snpmine.R
+## After SNP calling from parental genome was done, run snpmine.R
 
 Rscript ~/git/imprintia/snpmine.R -a Co1719tab.vcf -b Co1979tab.vcf -c Co1719_11sort.txt -d Co1979_9sort.txt -e /media/diskb/rocky/cruaraproj/SNP/crubellaexons.gff -y Co1719comsnp.csv -z Co1979comsnp.csv
 
-Convert the snp call to query file for temporary reference call by invoking:
+## Convert the snp call to query file for temporary reference call by invoking:
 
 #tail here is to grap all the line except the header
 tail -n +2 compfil48snp.csv | awk '{print $2 ":" $3 "-" $3}' > query.txt
 
-Call the RNA count. First, after the SNP number extraction using  bashrun.sh:
+## Call the RNA count. First, after the SNP number extraction using  bashrun.sh:
+
 Command example: nohup ./bashrun.sh query2.txt cr48x75.rep1.sorted.rmdup.rg.bam crub.chrom.sizes Cr48xCr75r2.csv &
 Notes: the genomic reference fasta file must be at the same place and the chrom.sizes file must have ".fai" end extension.
 
@@ -38,12 +39,12 @@ for i in $TEST; do
 	echo $OUTTEXT >> $4
 done
 
-Invoke:  fixedsnptest.R
+## Invoke:  fixedsnptest.R
 Rscript ~/git/imprintia/fixedsnptest.R -i ~/git/imprintia/rna/Co1719/rep1/AxB.bam.csv -s ~/git/imprintia/SNP/Asnp.csv -o ~/git/imprintia/rna/Co1719/rep1/AxBcalc.csv
 
 Afterwards, continue with:  stattest.R
 
-Then: filteringimp.R
+## Then: filteringimp.R
 
 HTSeq and Deseq
 
@@ -58,9 +59,9 @@ for i in ./*.bam; do
 	echo $i is finish!;
 done
 
-Afterwards, continue with contaminationcheck.R
+## Afterwards, continue with contaminationcheck.R
 
-And finally: newsummary.R
+## And finally: newsummary.R
 Rscript /~/git/imprintia/newsummary.R -a summaryAxB.csv -b summaryBxA.csv -c rawAxB.csv -d rawBxA.csv -w whitelist.csv -l alias.csv -o finalreport.csv
 
 whitelist.csv should contain gene ID, each gene per line.
