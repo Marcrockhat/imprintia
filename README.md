@@ -6,6 +6,7 @@ It is flexible in choosing the imprinting threshold and is designed to be compat
 ## Dependencies
 
 This pipeline requires these packages in your Linux system path:
+
 	R 3.0 or above
 	Bedtools
 	Samtools
