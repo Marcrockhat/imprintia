@@ -23,7 +23,7 @@ usage:
 
 or
 
-	./imprintia.sh --help
+	./imprintia.sh -h
 	
 For future help.
 	
