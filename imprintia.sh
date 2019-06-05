@@ -42,10 +42,14 @@ where:
 	-h  show this help text"
 
 #Configuration: please fill in the braket in the $() with your sofware path
-#samdex=$(samtools)
-#covbed=$(genomeCoverageBed)
-#freebay=$(~/FreeBayes/bin/freebayes)
-#vctab=$(vcf-to-tab)
+samdex=$(samtools)
+covbed=$(genomeCoverageBed)
+freebay=$(~/freebayes/bin/freebayes)
+vctab=$(vcf-to-tab)
+
+echo "this path will be used:
+ "$samdex", "$covbed", "$freebay", "$vctab"
+ "
 
 #Example usage samtools view -b CgA.bam | genomeCoverageBed -ibam crub.chrom.sizes -d > CgAcov.csv
 # This "${1/%\.bam/cov}" means replace ".bam" with "cov"
@@ -67,22 +71,25 @@ filename4=$(basename $4)
 filename5=$(basename $5)
 
 #Preparing input
+echo "Preparing input"
+
 echo "$5"
-#samtools faidx "$5"
-#mv "$5".fai ./temp/"$filename5".size
+"$samdex" faidx "$5"
+mv "$5".fai ./temp/"$filename5".size
 
 #Calling SNPs
-#genomeCoverageBed -ibam "$1" -g ./temp/"$filename5".size -d > ./temp/"${filename1/%\.bam/cov}".csv
-#genomeCoverageBed -ibam "$2" -g ./temp/"$filename5".size -d > ./temp/"${filename2/%\.bam/cov}".csv
+echo "Calling Parental SNPs"
+"$covbed" -ibam "$1" -g ./temp/"$filename5".size -d > ./temp/"${filename1/%\.bam/cov}".csv
+"$covbed" -ibam "$2" -g ./temp/"$filename5".size -d > ./temp/"${filename2/%\.bam/cov}".csv
 
-#~/FreeBayes/bin/freebayes -i -X -u --min-coverage 20 --min-alternate-total 10 -q 30 -b "$1" -v ./temp/"${filename1/%\.bam/snp}".vcf -f "$5"
-#~/FreeBayes/bin/freebayes -i -X -u --min-coverage 20 --min-alternate-total 10 -q 30 -b "$2" -v ./temp/"${filename2/%\.bam/snp}".vcf -f "$5"
+"$freebay" -i -X -u --min-coverage 20 --min-alternate-total 10 -q 30 -b "$1" -v ./temp/"${filename1/%\.bam/snp}".vcf -f "$5"
+"$freebay" -i -X -u --min-coverage 20 --min-alternate-total 10 -q 30 -b "$2" -v ./temp/"${filename2/%\.bam/snp}".vcf -f "$5"
 
-#cat ./temp/"${filename1/%\.bam/snp}".vcf | vcf-to-tab > ./temp/"${filename1/%\.bam/filtab}".csv
-#cat ./temp/"${filename2/%\.bam/snp}".vcf | vcf-to-tab > ./temp/"${filename2/%\.bam/filtab}".csv
+cat ./temp/"${filename1/%\.bam/snp}".vcf | "$vctab" > ./temp/"${filename1/%\.bam/filtab}".csv
+cat ./temp/"${filename2/%\.bam/snp}".vcf | "$vctab" > ./temp/"${filename2/%\.bam/filtab}".csv
 
 #Compiling SNPs
-#Rscript snpmine.R -a ./temp/"${filename1/%\.bam/filtab}".csv -b ./temp/"${filename2/%\.bam/filtab}".csv -c ./temp/"${filename1/%\.bam/cov}".csv -d ./temp/"${filename2/%\.bam/cov}".csv -e "$6" -y ./temp/"${filename1/%\.bam/comsnp}".csv -z ./temp/"${filename2/%\.bam/comsnp}.csv" 
+Rscript snpmine.R -a ./temp/"${filename1/%\.bam/filtab}".csv -b ./temp/"${filename2/%\.bam/filtab}".csv -c ./temp/"${filename1/%\.bam/cov}".csv -d ./temp/"${filename2/%\.bam/cov}".csv -e "$6" -y ./temp/"${filename1/%\.bam/comsnp}".csv -z ./temp/"${filename2/%\.bam/comsnp}.csv" 
 
 #Preparing the file for nucleotide calling
 tail -n +2 ./temp/"${filename1/%\.bam/comsnp}".csv | awk '{print $2 ":" $3 "-" $3}' > ./temp/query.txt
