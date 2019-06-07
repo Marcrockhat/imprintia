@@ -10,10 +10,26 @@ This pipeline requires these packages in your Linux system path:
 	R 3.0 or above
 	Bedtools
 	Samtools
+	Java 11
 	igvtools
-	python 3.0 or above
+	python 3.0 or above (3.5 are installed by default in Ubuntu 14)
 	vcf-to-tab
 	HTSeq
+
+# Quick Installation
+
+If you're in hurry and don't care what Java 11 will do to your system:
+
+	sudo apt-get install oracle-java11-installer oracle-java11-set-default
+	sudo apt-get install r-base bedtools samtools vcftools
+	
+For HTSeq:
+
+	sudo apt-get install build-essential python2.7-dev python-numpy python-matplotlib python-pysam python-htseq
+	
+For Freebayes, you will need to compile it by yourself. Please follow their instruction in their page (https://github.com/ekg/freebayes):
+
+	git clone --recursive git://github.com/ekg/freebayes.git
 
 # Quick Guide 
 
@@ -44,6 +60,13 @@ then
 	cat Asnp.vcf | vcf-to-tab > Atab.vcf
 
 ## After SNP calling from parental genome was done, run snpmine.R
+
+Please check and tweak the paramater in this script if you are working with a species with different ploidy level.
+
+	make_option(c("-p", "--ploidy"), type="integer", default = 2, help = "input ploidy level (default = 2)", metavar = "integer")
+)
+
+For example, change the "default = 2" into default = 4 if you're working with tetraploid species. 
 
 	Rscript ~/git/imprintia/snpmine.R -a Atab.vcf -b Btab.vcf -c Asort.txt -d Bsort.txt -e /media/diskb/rocky/cruaraproj/SNP/exons.gff -y Acomsnp.csv -z Bcomsnp.csv
 
