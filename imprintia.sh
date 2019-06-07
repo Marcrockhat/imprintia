@@ -41,11 +41,19 @@ usage:
 where:
 	-h  show this help text"
 
-#Configuration: please fill in the braket in the $() with your sofware path
-samdex=$(samtools)
-covbed=$(genomeCoverageBed)
-freebay=$(~/freebayes/bin/freebayes)
-vctab=$(vcf-to-tab)
+#Configuration: please replace PATH with your sofware path
+#Example
+#samdex=samtools
+#covbed=./genomeCoverageBed
+#freebay=~/freebayes/bin/freebayes
+#vctab=vcf-to-tab
+#igvcount=igvtools
+
+samdex=PATH
+covbed=PATH
+freebay=PATH
+vctab=PATH
+
 
 echo "this path will be used:
  "$samdex", "$covbed", "$freebay", "$vctab"
@@ -93,9 +101,9 @@ Rscript snpmine.R -a ./temp/"${filename1/%\.bam/filtab}".csv -b ./temp/"${filena
 
 #Preparing the file for nucleotide calling
 tail -n +2 ./temp/"${filename1/%\.bam/comsnp}".csv | awk '{print $2 ":" $3 "-" $3}' > ./temp/query.txt
-./nucleocount.sh ./temp/query.txt "$3" ./temp/"$filename5".size "${filename3}".csv
+./nucleocount.sh ./temp/query.txt "$3" ./temp/"$filename5".size "${filename3}".csv "$igvcount"
 tail -n +2 ./temp/"${filename2/%\.bam/comsnp}".csv | awk '{print $2 ":" $3 "-" $3}' > ./temp/query.txt
-./nucleocount.sh ./temp/query.txt "$4" ./temp/"$filename5".size "${filename4}".csv
+./nucleocount.sh ./temp/query.txt "$4" ./temp/"$filename5".size "${filename4}".csv "$igvcount"
 
 #Compiling counts
 
