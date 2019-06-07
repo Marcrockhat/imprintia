@@ -1,11 +1,11 @@
 ##gff-version	3
 dummy_species_chr1	.	gene	1000	2000	.	+	.	ID=GeneA;Name=Dummy_Gene_A
-dummy_species_chr1	.	gene	1000	2000	.	+	.	ID=ExonA1;Parent=GeneA
+dummy_species_chr1	.	exon	1000	2000	.	+	.	ID=ExonA1;Parent=GeneA
 dummy_species_chr1	.	gene	2500	3500	.	+	.	ID=GeneB;Name=Dummy_Gene_B
-dummy_species_chr1	.	gene	2500	3500	.	+	.	ID=ExonB1;Parent=GeneB
+dummy_species_chr1	.	exon	2500	3500	.	+	.	ID=ExonB1;Parent=GeneB
 dummy_species_chr1	.	gene	4000	5000	.	+	.	ID=GeneC;Name=Dummy_Gene_C
-dummy_species_chr1	.	gene	4000	5000	.	+	.	ID=ExonC1;Parent=GeneC
+dummy_species_chr1	.	exon	4000	5000	.	+	.	ID=ExonC1;Parent=GeneC
 dummy_species_chr1	.	gene	6000	7000	.	+	.	ID=GeneD;Name=Dummy_Gene_D
-dummy_species_chr1	.	gene	6000	7000	.	+	.	ID=ExonD1;Parent=GeneD
+dummy_species_chr1	.	exon	6000	7000	.	+	.	ID=ExonD1;Parent=GeneD
 dummy_species_chr1	.	gene	7500	8500	.	+	.	ID=GeneE;Name=Dummy_Gene_E
-dummy_species_chr1	.	gene	7500	8500	.	+	.	ID=ExonE1;Parent=GeneE
+dummy_species_chr1	.	exon	7500	8500	.	+	.	ID=ExonE1;Parent=GeneE
