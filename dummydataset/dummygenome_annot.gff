@@ -1,0 +1,6 @@
+##gff-version	3
+dummy_species_chr1	.	gene	1000	2000	.	+	.	ID=GeneA;Name=Dummy_Gene_A
+dummy_species_chr1	.	gene	2500	3500	.	+	.	ID=GeneB;Name=Dummy_Gene_B
+dummy_species_chr1	.	gene	4000	5000	.	+	.	ID=GeneC;Name=Dummy_Gene_C
+dummy_species_chr1	.	gene	6000	7000	.	+	.	ID=GeneD;Name=Dummy_Gene_D
+dummy_species_chr1	.	gene	7500	8500	.	+	.	ID=GeneE;Name=Dummy_Gene_E
