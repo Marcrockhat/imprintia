@@ -12,7 +12,7 @@ This pipeline requires these packages in your Linux system path:
 	Samtools
 	Java 11
 	igvtools
-	python 3.0 or above (3.5 are installed by default in Ubuntu 14)
+	python 3.0 or above (3.5 is installed by default in Ubuntu 14)
 	vcf-to-tab
 	HTSeq
 
