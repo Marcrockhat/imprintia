@@ -84,6 +84,7 @@ echo "Preparing input"
 echo "$5"
 "$samdex" faidx "$5"
 mv "$5".fai ./temp/"$filename5".size
+cp $5 ./temp/$5
 
 #Calling SNPs
 echo "Calling Parental SNPs"
@@ -101,9 +102,9 @@ Rscript snpmine.R -a ./temp/"${filename1/%\.bam/filtab}".csv -b ./temp/"${filena
 
 #Preparing the file for nucleotide calling
 tail -n +2 ./temp/"${filename1/%\.bam/comsnp}".csv | awk '{print $2 ":" $3 "-" $3}' > ./temp/query.txt
-./nucleocount.sh ./temp/query.txt "$3" ./temp/"$filename5".size "${filename3}".csv "$igvcount"
+./nucleocount.sh ./temp/query.txt "$3" ./temp/"$5" "${filename3}".csv "$igvcount"
 tail -n +2 ./temp/"${filename2/%\.bam/comsnp}".csv | awk '{print $2 ":" $3 "-" $3}' > ./temp/query.txt
-./nucleocount.sh ./temp/query.txt "$4" ./temp/"$filename5".size "${filename4}".csv "$igvcount"
+./nucleocount.sh ./temp/query.txt "$4" ./temp/"$5" "${filename4}".csv "$igvcount"
 
 #Compiling counts
 
