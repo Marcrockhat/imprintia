@@ -72,6 +72,7 @@ if(require('data.table')){
 
 library('data.table')
 
+#If you are running imprintia as a pipeline using imprintia.sh. You will need to change the default value manually. Automatization will be added later to accomodate easy deployment.
 option_list = list(
 	make_option(c("-a", "--file1"), type = "character", default = NULL, help = "parent 1 path", metavar = "character"),
 	make_option(c("-b", "--file2"), type = "character", default = NULL, help = "parent 2 path", metavar = "character"),
