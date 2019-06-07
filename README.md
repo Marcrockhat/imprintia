@@ -21,6 +21,9 @@ This pipeline requires these packages in your Linux system path:
 If you're in hurry and don't care what Java 11 will do to your system:
 
 	sudo apt-get install oracle-java11-installer oracle-java11-set-default
+
+Other requisities installation:
+
 	sudo apt-get install r-base bedtools samtools vcftools
 	
 For HTSeq:
