@@ -104,28 +104,28 @@ if(require('GenomicRanges')){
 library('GenomicRanges')
 
 #Load SNP data. SNP table can been calculated manually using Libreoffice Calc or vcf-to-tab from vcftools
-snp48 <- read.table(opt$file1, sep = '\t', header = FALSE)
-snp75 <- read.table(opt$file2, sep = '\t', header = FALSE)
+snp_par_A <- read.table(opt$file1, sep = '\t', header = FALSE)
+snp_par_B <- read.table(opt$file2, sep = '\t', header = FALSE)
 print("SNP data load success!")
 
-names(snp48) <- c("CHROM","POS","REF","GENO")
-snp48$SOURCE <- "cr48"
-snp48 <- snp48[c("SOURCE", "CHROM", "POS", "REF", "GENO")]
+names(snp_par_A) <- c("CHROM","POS","REF","GENO")
+snp_par_A$SOURCE <- "Par_A_Geno"
+snp_par_A <- snp_par_A[c("SOURCE", "CHROM", "POS", "REF", "GENO")]
 
-names(snp75) <- c("CHROM","POS","REF","GENO")
-snp75$SOURCE <- "cr75"
-snp75 <- snp75[c("SOURCE", "CHROM", "POS", "REF", "GENO")]
+names(snp_par_B) <- c("CHROM","POS","REF","GENO")
+snp_par_B$SOURCE <- "Par_B_Geno"
+snp_par_B <- snp_par_B[c("SOURCE", "CHROM", "POS", "REF", "GENO")]
 
 #Split the 4th column (GENO) into two new column A1 and A2 and remove the first Column
 #I don't know how to handle list created by lapply, so I need to convert them into character by using as.character
-snp48$A1 <- lapply(strsplit(as.character(snp48$GENO), "/"),"[",1)
-snp48$A2 <- lapply(strsplit(as.character(snp48$GENO), "/"),"[",2)
-snp75$A1 <- lapply(strsplit(as.character(snp75$GENO), "/"),"[",1)
-snp75$A2 <- lapply(strsplit(as.character(snp75$GENO), "/"),"[",2)
-snp48$A1 <- as.character(snp48$A1)
-snp48$A2 <- as.character(snp48$A2)
-snp75$A1 <- as.character(snp75$A1)
-snp75$A2 <- as.character(snp75$A2)
+snp_par_A$A1 <- lapply(strsplit(as.character(snp_par_A$GENO), "/"),"[",1)
+snp_par_A$A2 <- lapply(strsplit(as.character(snp_par_A$GENO), "/"),"[",2)
+snp_par_B$A1 <- lapply(strsplit(as.character(snp_par_B$GENO), "/"),"[",1)
+snp_par_B$A2 <- lapply(strsplit(as.character(snp_par_B$GENO), "/"),"[",2)
+snp_par_A$A1 <- as.character(snp_par_A$A1)
+snp_par_A$A2 <- as.character(snp_par_A$A2)
+snp_par_B$A1 <- as.character(snp_par_B$A1)
+snp_par_B$A2 <- as.character(snp_par_B$A2)
 
 print(paste("Ploidy level: working with ", opt$ploidy, "n"))
 
@@ -144,59 +144,59 @@ evaluator2 <- function(x){
 	return(evaluator(x)*opt$ploidy)
 }
 
-#snp48$V1 <- lapply(snp48$A1, evaluator)
-#snp48$V2 <- lapply(snp48$A2, evaluator)
-#snp75$V1 <- lapply(snp75$A1, evaluator)
-#snp75$V2 <- lapply(snp75$A2, evaluator)
-#snp48$A1 <- NULL
-#snp48$A2 <- NULL
-#snp75$A1 <- NULL
-#snp75$A2 <- NULL
+#snp_par_A$V1 <- lapply(snp_par_A$A1, evaluator)
+#snp_par_A$V2 <- lapply(snp_par_A$A2, evaluator)
+#snp_par_B$V1 <- lapply(snp_par_B$A1, evaluator)
+#snp_par_B$V2 <- lapply(snp_par_B$A2, evaluator)
+#snp_par_A$A1 <- NULL
+#snp_par_A$A2 <- NULL
+#snp_par_B$A1 <- NULL
+#snp_par_B$A2 <- NULL
 
-#snp48$SMALLE <- as.numeric(snp48$V1) + as.numeric(snp48$V2)
-#snp48$SMALLE <- as.character(snp48$SMALLE)
-#snp75$SMALLE <- as.numeric(snp75$V1) + as.numeric(snp75$V2)
-#snp75$SMALLE <- as.character(snp75$SMALLE)
-#snp48$V1 <- NULL
-#snp48$V2 <- NULL
-#snp75$V1 <- NULL
-#snp75$V2 <- NULL
+#snp_par_A$SMALLE <- as.numeric(snp_par_A$V1) + as.numeric(snp_par_A$V2)
+#snp_par_A$SMALLE <- as.character(snp_par_A$SMALLE)
+#snp_par_B$SMALLE <- as.numeric(snp_par_B$V1) + as.numeric(snp_par_B$V2)
+#snp_par_B$SMALLE <- as.character(snp_par_B$SMALLE)
+#snp_par_A$V1 <- NULL
+#snp_par_A$V2 <- NULL
+#snp_par_B$V1 <- NULL
+#snp_par_B$V2 <- NULL
 
 ##end of block
 
 ##This block below is an alternative way to convert allele to number, however, introduces bugs that haven't been tested.
 
-snp48$SMALLE <- gsub("A", (2+1)^0, snp48$GENO)
-snp48$SMALLE <- gsub("T", (2+1)^1, snp48$SMALLE)
-snp48$SMALLE <- gsub("G", (2+1)^2, snp48$SMALLE)
-snp48$SMALLE <- gsub("C", (2+1)^3, snp48$SMALLE)
+snp_par_A$SMALLE <- gsub("A", (2+1)^0, snp_par_A$GENO)
+snp_par_A$SMALLE <- gsub("T", (2+1)^1, snp_par_A$SMALLE)
+snp_par_A$SMALLE <- gsub("G", (2+1)^2, snp_par_A$SMALLE)
+snp_par_A$SMALLE <- gsub("C", (2+1)^3, snp_par_A$SMALLE)
 
-snp75$SMALLE <- gsub("A", (2+1)^0, snp75$GENO)
-snp75$SMALLE <- gsub("T", (2+1)^1, snp75$SMALLE)
-snp75$SMALLE <- gsub("G", (2+1)^2, snp75$SMALLE)
-snp75$SMALLE <- gsub("C", (2+1)^3, snp75$SMALLE)
-
-calctable <- NULL
-calculationtab <- NULL
-
-calctable <- data.table(strsplit(as.character(snp48$SMALLE),'/',fixed=TRUE))
-calctable$indexes <- seq(1,length(snp48$SMALLE),1)
-calctable$num <- cbind(sapply(strsplit(as.character(calctable$V1),',',fixed=TRUE), length))
-calculationtab <- data.frame(index= rep(calctable$indexes,calctable$num), value= as.numeric(unlist(sapply(calctable$V1, strsplit, ',', fixed=TRUE))))
-calctable <- cbind(calctable, geno= aggregate(calculationtab$value, by= list(calculationtab$index), FUN= sum, na.rm = TRUE))
-
-snp48$SMALLE <- calctable$geno.x
+snp_par_B$SMALLE <- gsub("A", (2+1)^0, snp_par_B$GENO)
+snp_par_B$SMALLE <- gsub("T", (2+1)^1, snp_par_B$SMALLE)
+snp_par_B$SMALLE <- gsub("G", (2+1)^2, snp_par_B$SMALLE)
+snp_par_B$SMALLE <- gsub("C", (2+1)^3, snp_par_B$SMALLE)
 
 calctable <- NULL
 calculationtab <- NULL
 
-calctable <- data.table(strsplit(as.character(snp75$SMALLE),'/',fixed=TRUE))
-calctable$indexes <- seq(1,length(snp75$SMALLE),1)
+calctable <- data.table(strsplit(as.character(snp_par_A$SMALLE),'/',fixed=TRUE))
+calctable$indexes <- seq(1,length(snp_par_A$SMALLE),1)
 calctable$num <- cbind(sapply(strsplit(as.character(calctable$V1),',',fixed=TRUE), length))
 calculationtab <- data.frame(index= rep(calctable$indexes,calctable$num), value= as.numeric(unlist(sapply(calctable$V1, strsplit, ',', fixed=TRUE))))
 calctable <- cbind(calctable, geno= aggregate(calculationtab$value, by= list(calculationtab$index), FUN= sum, na.rm = TRUE))
 
-snp75$SMALLE <- calctable$geno.x
+snp_par_A$SMALLE <- calctable$geno.x
+
+calctable <- NULL
+calculationtab <- NULL
+
+calctable <- data.table(strsplit(as.character(snp_par_B$SMALLE),'/',fixed=TRUE))
+calctable$indexes <- seq(1,length(snp_par_B$SMALLE),1)
+calctable$num <- cbind(sapply(strsplit(as.character(calctable$V1),',',fixed=TRUE), length))
+calculationtab <- data.frame(index= rep(calctable$indexes,calctable$num), value= as.numeric(unlist(sapply(calctable$V1, strsplit, ',', fixed=TRUE))))
+calctable <- cbind(calctable, geno= aggregate(calculationtab$value, by= list(calculationtab$index), FUN= sum, na.rm = TRUE))
+
+snp_par_B$SMALLE <- calctable$geno.x
 
 calctable <- NULL
 calculationtab <- NULL
@@ -206,70 +206,70 @@ calculationtab <- NULL
 print("Indexing success!")
 
 #Creating Ranges for subsetting
-pos48 <- IRanges(snp48$POS, snp48$POS)
-pos75 <- IRanges(snp75$POS, snp75$POS)
+pos_par_A <- IRanges(snp_par_A$POS, snp_par_A$POS)
+pos_par_B <- IRanges(snp_par_B$POS, snp_par_B$POS)
 #Creating GenomicRanges for subsetting
-gpos48 <- GRanges(snp48$CHROM, pos48)
-gpos75 <- GRanges(snp75$CHROM, pos75)
+gpos_par_A <- GRanges(snp_par_A$CHROM, pos_par_A)
+gpos_par_B <- GRanges(snp_par_B$CHROM, pos_par_B)
 
 #Read genome coverage
-cov48 <- read.table(opt$coverage1, header = FALSE)
-names(cov48) <- c("CHROM","POS","COV")
-poscov48 <- IRanges(cov48$POS, cov48$POS)
-gposcov48 <- GRanges(cov48$CHROM, poscov48)
-cov75 <- read.table(opt$coverage2, header = FALSE)
-names(cov75) <- c("CHROM","POS","COV")
-poscov75 <- IRanges(cov75$POS, cov75$POS)
-gposcov75 <- GRanges(cov75$CHROM, poscov75)
+cov_par_A <- read.table(opt$coverage1, header = FALSE)
+names(cov_par_A) <- c("CHROM","POS","COV")
+poscov_par_A <- IRanges(cov_par_A$POS, cov_par_A$POS)
+gposcov_par_A <- GRanges(cov_par_A$CHROM, poscov_par_A)
+cov_par_B <- read.table(opt$coverage2, header = FALSE)
+names(cov_par_B) <- c("CHROM","POS","COV")
+poscov_par_B <- IRanges(cov_par_B$POS, cov_par_B$POS)
+gposcov_par_B <- GRanges(cov_par_B$CHROM, poscov_par_B)
 
 #Mining coverage
-overlap48 <- findOverlaps(gpos48, gposcov48, select="first")
-over <- as.matrix(overlap48)
-#Subset the cov48 for position in snp48
-cover48 <- cov48$COV[over]
-newsnp48 <- cbind(snp48,cover48)
-overlap48b <- findOverlaps(gpos48, gposcov75, select="first")
-overb <- as.matrix(overlap48b)
-#Subset the cov75 for position in snp48
-cover75 <- cov75$COV[overb]
-newsnp48 <- cbind(newsnp48,cover75)
+overlap_par_A <- findOverlaps(gpos_par_A, gposcov_par_A, select="first")
+over <- as.matrix(overlap_par_A)
+#Subset the cov_par_A for position in snp_par_A
+cover_par_A <- cov_par_A$COV[over]
+newsnp_par_A <- cbind(snp_par_A,cover_par_A)
+overlap_par_Ab <- findOverlaps(gpos_par_A, gposcov_par_B, select="first")
+overb <- as.matrix(overlap_par_Ab)
+#Subset the cov_par_B for position in snp_par_A
+cover_par_B <- cov_par_B$COV[overb]
+newsnp_par_A <- cbind(newsnp_par_A,cover_par_B)
 
 #Zeroing NAs
-newsnp48$cover75[is.na(newsnp48$cover75)] <- 0
+newsnp_par_A$cover_par_B[is.na(newsnp_par_A$cover_par_B)] <- 0
 
 #Mining coverage
-overlap75 <- findOverlaps(gpos75, gposcov48,  select="first")
-over <- as.matrix(overlap75)
-#Subset the cov48 for position in snp75
-cover48 <- cov48$COV[over]
-newsnp75 <- cbind(snp75,cover48)
-overlap75b <- findOverlaps(gpos75, gposcov75,  select="first")
-overb <- as.matrix(overlap75b)
-#Subset the cov75 for position in snp75
-cover75 <- cov75$COV[overb]
-newsnp75 <- cbind(newsnp75,cover75)
+overlap_par_B <- findOverlaps(gpos_par_B, gposcov_par_A,  select="first")
+over <- as.matrix(overlap_par_B)
+#Subset the cov_par_A for position in snp_par_B
+cover_par_A <- cov_par_A$COV[over]
+newsnp_par_B <- cbind(snp_par_B,cover_par_A)
+overlap_par_Bb <- findOverlaps(gpos_par_B, gposcov_par_B,  select="first")
+overb <- as.matrix(overlap_par_Bb)
+#Subset the cov_par_B for position in snp_par_B
+cover_par_B <- cov_par_B$COV[overb]
+newsnp_par_B <- cbind(newsnp_par_B,cover_par_B)
 
 #Zeroing NAs
-newsnp75$cover48[is.na(newsnp75$cover48)] <- 0
+newsnp_par_B$cover_par_A[is.na(newsnp_par_B$cover_par_A)] <- 0
 
 print("Coverage assignment success!")
 
 #Find overlap between queries
-overlapping <- findOverlaps(gpos48, gpos75)
+overlapping <- findOverlaps(gpos_par_A, gpos_par_B)
 overlapping <- as.matrix(overlapping)
-newsnp48$ALT <- lapply(snp48$REF, evaluator2)
-newsnp48$ALT <- as.character(newsnp48$ALT)
-newsnp48$ALT[overlapping[,1]] <- snp75$SMALLE[overlapping[,2]]
-newsnp48$OVER <- "FALSE"
-newsnp48$OVER[overlapping[,1]] <- "TRUE"
+newsnp_par_A$ALT <- lapply(snp_par_A$REF, evaluator2)
+newsnp_par_A$ALT <- as.character(newsnp_par_A$ALT)
+newsnp_par_A$ALT[overlapping[,1]] <- snp_par_B$SMALLE[overlapping[,2]]
+newsnp_par_A$OVER <- "FALSE"
+newsnp_par_A$OVER[overlapping[,1]] <- "TRUE"
 
-overlapping <- findOverlaps(gpos75, gpos48)
+overlapping <- findOverlaps(gpos_par_B, gpos_par_A)
 overlapping <- as.matrix(overlapping)
-newsnp75$ALT <- lapply(snp75$REF, evaluator2)
-newsnp75$ALT <- as.character(newsnp75$ALT)
-newsnp75$ALT[overlapping[,1]] <- snp48$SMALLE[overlapping[,2]]
-newsnp75$OVER <- "FALSE"
-newsnp75$OVER[overlapping[,1]] <- "TRUE"
+newsnp_par_B$ALT <- lapply(snp_par_B$REF, evaluator2)
+newsnp_par_B$ALT <- as.character(newsnp_par_B$ALT)
+newsnp_par_B$ALT[overlapping[,1]] <- snp_par_A$SMALLE[overlapping[,2]]
+newsnp_par_B$OVER <- "FALSE"
+newsnp_par_B$OVER[overlapping[,1]] <- "TRUE"
 
 #Read Annotation
 annot <- read.table(opt$annotation, header = FALSE)
@@ -291,81 +291,81 @@ posgenes <- IRanges(genes$start, genes$end)
 gposgenes <- GRanges(genes$seqid, posgenes, genes$strand, genes$type)
 
 #Find overlapping exons
-overexons <- findOverlaps(gpos48, gposexons, select = "first")
+overexons <- findOverlaps(gpos_par_A, gposexons, select = "first")
 over <- as.matrix(overexons)
 exonhit <-  exons[over,]
 exoncat <-  paste(exonhit$seqid,"/",exonhit$start,"/",exonhit$end,"/",exonhit$strand)
-newsnp48 <- cbind(newsnp48,exoncat)
+newsnp_par_A <- cbind(newsnp_par_A,exoncat)
 
-overexons <- findOverlaps(gpos75, gposexons, select = "first")
+overexons <- findOverlaps(gpos_par_B, gposexons, select = "first")
 over <- as.matrix(overexons)
 exonhit <-  exons[over,]
 exoncat <-  paste(exonhit$seqid,"/",exonhit$start,"/",exonhit$end,"/",exonhit$strand)
-newsnp75 <- cbind(newsnp75,exoncat)
+newsnp_par_B <- cbind(newsnp_par_B,exoncat)
 
 print("Annotation assigment done!")
 
 #Find overlapping genes
 #DISTINCT field is a field which contain boolean information whether the parental genome alleles are the same or not. TRUE if they are different, FALSE if they are the same
-overgenes <- findOverlaps(gpos48, gposgenes, select = "first")
+overgenes <- findOverlaps(gpos_par_A, gposgenes, select = "first")
 over <- as.matrix(overgenes)
 genehit <-  genes[over,]
 genecat <-  paste(genehit$seqid,"/",genehit$start,"/",genehit$end,"/",genehit$strand)
-newsnp48 <- cbind(newsnp48,genecat)
-newsnp48$DISTINCT <- (newsnp48$SMALLE != newsnp48$ALT)
+newsnp_par_A <- cbind(newsnp_par_A,genecat)
+newsnp_par_A$DISTINCT <- (newsnp_par_A$SMALLE != newsnp_par_A$ALT)
 
-overgenes <- findOverlaps(gpos75, gposgenes, select = "first")
+overgenes <- findOverlaps(gpos_par_B, gposgenes, select = "first")
 over <- as.matrix(overgenes)
 genehit <-  genes[over,]
 genecat <-  paste(genehit$seqid,"/",genehit$start,"/",genehit$end,"/",genehit$strand)
-newsnp75 <- cbind(newsnp75,genecat)
-newsnp75$DISTINCT <- (newsnp75$SMALLE != newsnp75$ALT)
+newsnp_par_B <- cbind(newsnp_par_B,genecat)
+newsnp_par_B$DISTINCT <- (newsnp_par_B$SMALLE != newsnp_par_B$ALT)
 
 #Filtering and Cosmetics
 
-#filsnp48 <- newsnp48[newsnp48$cover48 <= 200 & newsnp48$cover75 >= 20 & newsnp48$cover75 <= 200,]
+#filsnp_par_A <- newsnp_par_A[newsnp_par_A$cover_par_A <= 200 & newsnp_par_A$cover_par_B >= 20 & newsnp_par_A$cover_par_B <= 200,]
 #Line below are added for anticipating unpredicted behaviour of stampy alignment. Remove (or put comments) to make it work
-filsnp48 <- newsnp48[newsnp48$cover48 >= 20 & newsnp48$cover48 <= 200 & newsnp48$cover75 >= 20 & newsnp48$cover75 <= 200,]
-filsnp48nov <- filsnp48[filsnp48$OVER == "FALSE",]
-colnames(filsnp48)[which(names(filsnp48)=='SMALLE')] <- "MAT"
-colnames(filsnp48)[which(names(filsnp48)=='ALT')] <- "PAT"
+filsnp_par_A <- newsnp_par_A[newsnp_par_A$cover_par_A >= 20 & newsnp_par_A$cover_par_A <= 200 & newsnp_par_A$cover_par_B >= 20 & newsnp_par_A$cover_par_B <= 200,]
+filsnp_par_Anov <- filsnp_par_A[filsnp_par_A$OVER == "FALSE",]
+colnames(filsnp_par_A)[which(names(filsnp_par_A)=='SMALLE')] <- "MAT"
+colnames(filsnp_par_A)[which(names(filsnp_par_A)=='ALT')] <- "PAT"
 
-#filsnp75 <- newsnp75[newsnp75$cover75 <= 200 & newsnp75$cover48 >= 20 & newsnp75$cover48 <= 200,]
+#filsnp_par_B <- newsnp_par_B[newsnp_par_B$cover_par_B <= 200 & newsnp_par_B$cover_par_A >= 20 & newsnp_par_B$cover_par_A <= 200,]
 #Line below are added for anticipating unpredicted behaviour of stampy alignment. Remove (or put comments) to make it work
-filsnp75 <- newsnp75[newsnp75$cover75 >= 20 & newsnp75$cover75 <= 200 & newsnp75$cover48 >= 20 & newsnp75$cover48 <= 200,]
-filsnp75nov <- filsnp75[filsnp75$OVER == "FALSE",]
-colnames(filsnp75)[which(names(filsnp75)=='SMALLE')] <- "MAT"
-colnames(filsnp75)[which(names(filsnp75)=='ALT')] <- "PAT"
+filsnp_par_B <- newsnp_par_B[newsnp_par_B$cover_par_B >= 20 & newsnp_par_B$cover_par_B <= 200 & newsnp_par_B$cover_par_A >= 20 & newsnp_par_B$cover_par_A <= 200,]
+filsnp_par_Bnov <- filsnp_par_B[filsnp_par_B$OVER == "FALSE",]
+colnames(filsnp_par_B)[which(names(filsnp_par_B)=='SMALLE')] <- "MAT"
+colnames(filsnp_par_B)[which(names(filsnp_par_B)=='ALT')] <- "PAT"
 
 #Switching the allele to match to the maternal base
-matsnpfilcomp <- rbind(filsnp48nov,filsnp75nov)
+matsnpfilcomp <- rbind(filsnp_par_Anov,filsnp_par_Bnov)
 colnames(matsnpfilcomp)[which(names(matsnpfilcomp)=='SMALLE')] <- "MAT"
 colnames(matsnpfilcomp)[which(names(matsnpfilcomp)=='ALT')] <- "PAT"
-#SMALLE column in snp75 is its alllele which is paternal from Cr48 x Cr75 side and otherwise for ALT
-matsnpfilcomp$MAT[matsnpfilcomp$SOURCE == "cr75"] <- filsnp75nov$ALT
-matsnpfilcomp$PAT[matsnpfilcomp$SOURCE == "cr75"] <- filsnp75nov$SMALLE
+#SMALLE column in snp_par_B is its alllele which is paternal from Par_A_Geno x Par_B_Geno side and otherwise for ALT
+matsnpfilcomp$MAT[matsnpfilcomp$SOURCE == "Par_B_Geno"] <- filsnp_par_Bnov$ALT
+matsnpfilcomp$PAT[matsnpfilcomp$SOURCE == "Par_B_Geno"] <- filsnp_par_Bnov$SMALLE
 
 #Switching the allele to match to the maternal base
-patsnpfilcomp <- rbind(filsnp48nov,filsnp75nov)
+patsnpfilcomp <- rbind(filsnp_par_Anov,filsnp_par_Bnov)
 colnames(patsnpfilcomp)[which(names(patsnpfilcomp)=='SMALLE')] <- "MAT"
 colnames(patsnpfilcomp)[which(names(patsnpfilcomp)=='ALT')] <- "PAT"
-#SMALLE column in snp75 is its alllele which is paternal from Cr75 x Cr48 side and otherwise for ALT
-patsnpfilcomp$MAT[patsnpfilcomp$SOURCE == "cr48"] <- filsnp48nov$ALT
-patsnpfilcomp$PAT[patsnpfilcomp$SOURCE == "cr48"] <- filsnp48nov$SMALLE
+#SMALLE column in snp_par_B is its alllele which is paternal from Par_B_Geno x Par_A_Geno side and otherwise for ALT
+patsnpfilcomp$MAT[patsnpfilcomp$SOURCE == "Par_A_Geno"] <- filsnp_par_Anov$ALT
+patsnpfilcomp$PAT[patsnpfilcomp$SOURCE == "Par_A_Geno"] <- filsnp_par_Anov$SMALLE
 
 print("Switching succes!")
 
 #If Distinct is TRUE then the sequence must be overlapped and has different value which is needed for analysis. However, overlapping region with same value automatically discarded
-filsnp48 <- filsnp48[filsnp48$OVER == "TRUE",]
-filsnp48 <- filsnp48[filsnp48$DISTINCT == "TRUE",]
-matsnpfilcomp <- rbind(matsnpfilcomp, filsnp48)
+filsnp_par_A <- filsnp_par_A[filsnp_par_A$OVER == "TRUE",]
+filsnp_par_A <- filsnp_par_A[filsnp_par_A$DISTINCT == "TRUE",]
+matsnpfilcomp <- rbind(matsnpfilcomp, filsnp_par_A)
 #add/remove (comment) line below to make the downstream analysis faster, however, this process might reduce certain possibilities in assessing region without annotation
 matsnpfilcomp <- matsnpfilcomp[matsnpfilcomp$genecat != "NA / NA / NA / NA",]
 
 
-filsnp75 <- filsnp75[filsnp75$OVER == "TRUE",]
-filsnp75 <- filsnp75[filsnp75$DISTINCT == "TRUE",]
-patsnpfilcomp <- rbind(patsnpfilcomp, filsnp75)
+filsnp_par_B <- filsnp_par_B[filsnp_par_B$OVER == "TRUE",]
+filsnp_par_B <- filsnp_par_B[filsnp_par_B$DISTINCT == "TRUE",]
+patsnpfilcomp <- rbind(patsnpfilcomp, filsnp_par_B)
 #add/remove (comment) line below to make the downstream analysis faster, however, this process might reduce certain possibilities in assessing region without annotation
 patsnpfilcomp <- patsnpfilcomp[patsnpfilcomp$genecat != "NA / NA / NA / NA",]
 
