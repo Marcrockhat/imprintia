@@ -2,7 +2,7 @@
 #!/usr/bin/env Rscript
 #MRH 18112013
 ##  
-##  filteringimp.R v0, This script is used to filter imprinting genes based on their consistency in two replicates.
+##  filteringimp.R v0, This script is used to filter imprinted genes based on their consistency in two replicates.
 ##  
 ##  This source code file is part of the analysis pipeline Imprintia
 ##  Copyright (C) 2016 Marcelinus Rocky Hatorangan
