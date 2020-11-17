@@ -185,8 +185,7 @@ Give you:
 	GeneA
 	GeneB
 	GeneC
-	
-Feel free to drop me some email for further questions.
+
 
 ### Generating Whitelist
 
@@ -227,3 +226,5 @@ You will get:
 If the format is correct, you can proceed with:
 
 	Rscript /~/git/imprintia/whitelist.R -i compiled.csv -o whitelist.csv
+	
+Feel free to drop me some email for further questions. :smile:
