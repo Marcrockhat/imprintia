@@ -170,7 +170,7 @@ This additional step is added to provide a flexible filter of imprinted genes. F
 
 Example:
 
-	Rscript /~/git/imprintia/newsummary.R -a summaryAxB.csv -b summaryBxA.csv -c rawAxB.csv -d rawBxA.csv -w whitelist.csv -l alias.csv -o finalreport.csv
+	Rscript ~/git/imprintia/newsummary.R -a summaryAxB.csv -b summaryBxA.csv -c rawAxB.csv -d rawBxA.csv -w whitelist.csv -l alias.csv -o finalreport.csv
 
 whitelist.csv is a whitelist file that provide additional filter for which genes shall pass the imprinting criteria. If you want to assess genomic imprinting in a tissue that surrounded by maternal origin tissue (eg. dicots endosperm tissue), this list should contain genes that are confirmed to be expressed only in the endosperm to avoid maternal tissue contamination bias.
 
@@ -224,6 +224,6 @@ You will get:
 
 If the format is correct, you can proceed with:
 
-	Rscript /~/git/imprintia/whitelist.R -i compiled.csv -o whitelist.csv
+	Rscript ~/git/imprintia/whitelistgen.R -i compiled.csv -o whitelist.csv
 	
 Feel free to drop me some email for further questions. :smile:
