@@ -36,7 +36,8 @@ args <- commandArgs(TRUE)
 #Opt section
 library('optparse')
 option_list = list(
-	make_option(c("-i", "--input"), type = "character", default = NULL, help = "parent input", metavar = "character")
+	make_option(c("-i", "--input"), type = "character", default = NULL, help = "parent input", metavar = "character"),
+	make_option(c("-o", "--output"), type = "character", default = NULL, help = "parent input", metavar = "character")
 )
 
 opt_parser = OptionParser(option_list= option_list)
@@ -66,5 +67,5 @@ newreads$tolerance <- newreads$Control * 0.8
 #The process below will discard any loci with expression level below 0.8 of the control tolerance level in all RNA library.
 newreads <- subset(newreads, tolerance <= AxBr1 | tolerance <= AxBr2 | tolerance <= BxAr1 | tolerance <= BxAr2) 
 
-write.table(newreads, file= "whitelistcalc.csv", sep= "\t", quote= FALSE, row.names= TRUE, col.names= TRUE) 
-write.table(newreads[,1] file= "whitelist.csv", sep= "\t", quote= FALSE, row.names= TRUE, col.names= TRUE) 
+write.table(newreads, file= paste(opt$output,"calc.csv", sep= ""), sep= "\t", quote= FALSE, row.names= TRUE, col.names= TRUE) 
+write.table(newreads[,1] file= paste(opt$output,".csv", sep= ""), sep= "\t", quote= FALSE, row.names= TRUE, col.names= TRUE) 
