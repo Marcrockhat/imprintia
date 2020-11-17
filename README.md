@@ -7,7 +7,7 @@ Dummy files are included for testing the pipeline and as examples of input forma
 
 Please cite this paper if you are using this pipeline:
 
-Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. https://doi.org/10.1038/s41477-018-0161-6
+> Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. [https://doi.org/10.1038/s41477-018-0161-6](https://doi.org/10.1038/s41477-018-0161-6)
 
 
 ## Dependencies
@@ -102,8 +102,7 @@ Invoking snpmine.R will call SNPs in each parent one by one. This script provide
 
 Please check and tweak the paramater in this script if you are working with a species with different ploidy level.
 
-	make_option(c("-p", "--ploidy"), type="integer", default = 2, help = "input ploidy level (default = 2)", metavar = "integer")
-)
+	make_option(c("-p", "--ploidy"), type="integer", default = 2, help = "input ploidy level (default = 2)", metavar = "integer"))
 
 For example, change the "default = 2" into default = 4 if you're working with tetraploid species. 
 
