@@ -1,13 +1,17 @@
 # Imprintia
 
 Imprintia is a pipeline designed to discover imprinted genes from DNA-seq and RNA-seq data.
-It is flexible in choosing the imprinting threshold and is designed to be compatible for diploid species or species with different ploidy level. It requires parental DNA-seq data and offspring RNA-seq data for imprinting detection.
+It is flexible in choosing the imprinting threshold and is designed to be compatible for diploid species or species with different ploidy level. It requires parental DNA-seq data and offspring RNA-seq data for imprinting detection. Regardless its initial objectives as a pipeline to identify imprinted genes, this pipeline also can be used for quantifying and parentaging RNA reads in other study such as allelic specific expression (ASE) analysis.
 
 Dummy files are included for testing the pipeline and as examples of input format.
 
+Please cite this paper if you are using this pipeline:
+
+Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. https://doi.org/10.1038/s41477-018-0161-6
+
 ## Dependencies
 
-This pipeline requires these packages in your Linux system path:
+This pipeline requires these packages installed in your Linux system path:
 
 	R 3.0 or above
 	Bedtools
@@ -67,7 +71,7 @@ Imprintia.sh will call all the script located in the same folder. For manual run
 
 # For Manual Step by Step Use
 
-## SNP Calling from parental genome
+## SNPs Calling from parental genome
 
 Example in bash script:
 
@@ -88,7 +92,9 @@ then this step is to produce a list of SNPs in easy to read tabulated format.
 	cat Asnp.vcf | vcf-to-tab > Atab.vcf
 
 
-## After SNP calling from parental genome was done, run snpmine.R
+## SNPs Tagging and Preparation
+
+Invoking snpmine.R will call SNPs in each parent one by one. This script provides working SNPs to be processed in the next step from each parent.
 
 Please check and tweak the paramater in this script if you are working with a species with different ploidy level.
 
@@ -99,7 +105,7 @@ For example, change the "default = 2" into default = 4 if you're working with te
 
 	Rscript ~/git/imprintia/snpmine.R -a Atab.vcf -b Btab.vcf -c Asort.txt -d Bsort.txt -e /media/diskb/rocky/cruaraproj/SNP/exons.gff -y Acomsnp.csv -z Bcomsnp.csv
 
-## Convert the snp call to query file for temporary reference call by invoking:
+## SNPs Qualification
 
 The query file contains all SNPs with 'enough' evidence to be informative identifier of each parental genotype based.
 No non-informative SNPs will not be included in this list for example: RR --, RR AR, A1A1 A1A2, vice versa and so on.
@@ -107,10 +113,9 @@ No non-informative SNPs will not be included in this list for example: RR --, RR
 	#tail here is to grap all the line except the header"
 	tail -n +2 Acomsnp.csv | awk '{print $2 ":" $3 "-" $3}' > query.txt
 
-## Call the RNA count. First, after the SNP number extraction using  bashrun.sh:
+## RNA Reads Parentaging and Quantification
 
-This process is to quantify RNA reads based on their parental origins.
-
+This process is to quantify RNA reads based on their parental origin and can be done by invoking bashrun.sh.
 Command example:
 
 	nohup ./bashrun.sh query2.txt cr48x75.rep1.sorted.rmdup.rg.bam crub.chrom.sizes Cr48xCr75r2.csv &
@@ -127,34 +132,38 @@ The script below will require igvtools.jar from IGV and need to be called using 
 		echo $OUTTEXT >> $4
 	done
 
-## Invoke:  fixedsnptest.R
+## Genomic Imprinting Working Table Generation
 
-This process is needed to create a useable calculation table needed for the next process.
+This process is needed to create a useable calculation table needed for the next process and can be done by invoking fixedsnptest.R and stattest.R.
+This process is initiated using:
 
 	Rscript ~/git/imprintia/fixedsnptest.R -i ~/git/imprintia/rna/AxB.bam.csv -s ~/git/imprintia/SNP/Asnp.csv -o ~/git/imprintia/rna/AxBcalc.csv
 
-Afterwards, continue with:  stattest.R
+Afterwards, continue with:
 
-## Then: filteringimp.R
+	Rscript ~/git/imprintia/stattest.R -i ~/git/imprintia/rna/AxBcalc.csv -o ~/git/imprintia/rna/AxBdet.csv
+	
+This step generate tables with read counts assigned to crossed parents for each parental cross RNA library and its statistical test as shown in these two papers:
 
-This step is used to test imprinting consistency in two RNA-seq input library. For example, one gene can be found to be maternally imprinted in AxB.bam library but have not enough evidence of similar imprinting in the BxA.bam.
+Hatorangan, M. R. et al. (2016) ‘Rapid Evolution of Genomic Imprinting in Two Species of the Brassicaceae’, The Plant Cell. American Society of Plant Biologists, 28(8), pp. 1815–1827. doi: 10.1105/tpc.16.00304. https://doi.org/10.1105/tpc.16.00304
 
-You will need to call HTSeq and Deseq.
+Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. https://doi.org/10.1038/s41477-018-0161-6
 
-Before continuing, a comparison table need to be created first by executing:
 
-	python -m HTSeq.scripts.count -t gene -i ID -f bam <alignment_file> <gff_file>
+## Genomic Imprinting Consistency Test
 
-or 
+This is the final step in imprintia.sh. Additional step such as generating a white list or filtering contamination can be added after this. Consistency step is used to test imprinting in two RNA-seq input library. For example, inconsistent imprinting occured if one gene was found to be maternally imprinted in AxB.bam library but had not enough evidence of similar imprinting in the BxA.bam. This step can be done by invoking filteringimp.R.
 
-	for i in ./*.bam; do
-		python -m HTSeq.scripts.count -f bam -t gene -i ID $i genes.gff > "${i/%.bam}.csv";
-		echo $i is finish!;
-	done
+Example:
 
-## And finally: newsummary.R
+	Rscript filteringimp.R -a ~/git/imprintia/rna/AxBdet.csv -b ~/git/imprintia/rna/BxAdet.csv -c ./result/compiled.csv -r ./result/raw.csv -o ./result/summary.csv
 
-This final step is to filter out 
+# Additional Step
+
+## Removal of Contamination 
+
+This additional step is added to provide a flexible filter of imprinted genes. For example, this step is needed to remove known contamination from RNA expressed in maternal specific tissue. A script, newsummary.R is provided as a stand alone script outside the imprintia.sh.
+
 Example:
 
 	Rscript /~/git/imprintia/newsummary.R -a summaryAxB.csv -b summaryBxA.csv -c rawAxB.csv -d rawBxA.csv -w whitelist.csv -l alias.csv -o finalreport.csv
@@ -172,4 +181,44 @@ Give you:
 	GeneB
 	GeneC
 	
+Feel free to drop me some email for further questions.
 
+## Generating Whitelist
+
+For a detailed process of generating whitelist.csv, please refer to section methods in the cited paper and this step need to be adjusted based on user's requirement instead of mandatory.
+
+For the cited paper, endosperm specific genes whitelist.csv were generated by comparing transcriptome data sets from whole seeds RNA and endosperm enriched tissue RNA. In total, there are two important filtering process based on the expression level per se, which are: ratio or reads based on their parentage (8:1 or 2:4) and 
+You will need to call HTSeq and Deseq.
+
+Before continuing, a comparison table need to be created first by executing:
+
+	python -m HTSeq.scripts.count -t gene -i ID -f bam <alignment_file> <gff_file>
+
+or 
+
+	for i in ./*.bam; do
+		python -m HTSeq.scripts.count -f bam -t gene -i ID $i genes.gff > "${i/%.bam}.csv";
+		echo $i is finish!;
+	done
+
+Above step will produce a simple matrix with reads from each library the output for each file need to be combined into one single .csv file or any format readable to R.
+This matrix need to be compiled into one file including the control library reads count. The column header for the input is mandatory to be named as the example, below:
+
+By invoking:
+
+	cat compiled.csv
+	
+You will get:
+
+	GeneID	Control	AxBr1	AxBr2	BxAr1	BxAr2
+	GeneA	123	341	234	543	201
+	GeneB	2345	2314	2159	3994	2111
+	GeneC	546	290	912	512	334
+	GeneD	734	896	436	1004	1023
+	GeneE	42414	1201	3419	2997	7102
+	GeneF	672	501	477	559	437
+	GeneG	133	10	76	50	34
+
+If the format is correct, you can proceed with:
+
+	Rscript /~/git/imprintia/whitelist.R -i compiled.csv -o whitelist.csv
