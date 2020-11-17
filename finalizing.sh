@@ -24,28 +24,9 @@
 ##
 ##  Tested on Ubuntu 14.04
 
-echo "For help type:
-
-imprintia.sh -h
-
-Imprintia
-pipeline to identify imprinted genes
-usage:
-	./imprintia.sh Abamfile1.bam Bbamfile2.bam AxB.bam BxA.bam reference.fasta annotation.gff3
-where:
-	-h  show this help text"
-
-#Configuration: please fill in the braket in the $() with your sofware path
-#samdex=$(samtools)
-#covbed=$(genomeCoverageBed)
-#freebay=$(~/FreeBayes/bin/freebayes)
-#vctab=$(vcf-to-tab)
-
-#Example usage samtools view -b CgA.bam | genomeCoverageBed -ibam crub.chrom.sizes -d > CgAcov.csv
-# This "${1/%\.bam/cov}" means replace ".bam" with "cov"
 echo "
 $1 : replicate 1 compiled result
-$2 : replicate 2 compiled
+$2 : replicate 2 compiled result
 $3 : first cross bam
 $4 : second cross bam
 $5 : reference genome
