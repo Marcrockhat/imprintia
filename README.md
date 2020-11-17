@@ -9,6 +9,7 @@ Please cite this paper if you are using this pipeline:
 
 Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. https://doi.org/10.1038/s41477-018-0161-6
 
+
 ## Dependencies
 
 This pipeline requires these packages installed in your Linux system path:
@@ -22,7 +23,8 @@ This pipeline requires these packages installed in your Linux system path:
 	vcf-to-tab
 	HTSeq
 
-# Quick Installation
+
+## Quick Installation
 
 If you're in hurry and don't care what Java 11 will do to your system:
 
@@ -40,7 +42,8 @@ For Freebayes, you will need to compile it by yourself. Please follow their inst
 
 	git clone --recursive git://github.com/ekg/freebayes.git
 
-# Quick Guide 
+
+## Quick Guide 
 
 Please tweak this configuration header in the imprintia.sh and adjust it to your system:
 
@@ -69,9 +72,10 @@ For future help for the input requirement.
 
 Imprintia.sh will call all the script located in the same folder. For manual running of each script, please see below.
 
-# For Manual Step by Step Use
 
-## SNPs Calling from parental genome
+## Using Manual Step by Step Script
+
+### SNPs Calling from parental genome
 
 Example in bash script:
 
@@ -92,7 +96,7 @@ then this step is to produce a list of SNPs in easy to read tabulated format.
 	cat Asnp.vcf | vcf-to-tab > Atab.vcf
 
 
-## SNPs Tagging and Preparation
+### SNPs Tagging and Preparation
 
 Invoking snpmine.R will call SNPs in each parent one by one. This script provides working SNPs to be processed in the next step from each parent.
 
@@ -105,7 +109,7 @@ For example, change the "default = 2" into default = 4 if you're working with te
 
 	Rscript ~/git/imprintia/snpmine.R -a Atab.vcf -b Btab.vcf -c Asort.txt -d Bsort.txt -e /media/diskb/rocky/cruaraproj/SNP/exons.gff -y Acomsnp.csv -z Bcomsnp.csv
 
-## SNPs Qualification
+### SNPs Qualification
 
 The query file contains all SNPs with 'enough' evidence to be informative identifier of each parental genotype based.
 No non-informative SNPs will not be included in this list for example: RR --, RR AR, A1A1 A1A2, vice versa and so on.
@@ -113,7 +117,7 @@ No non-informative SNPs will not be included in this list for example: RR --, RR
 	#tail here is to grap all the line except the header"
 	tail -n +2 Acomsnp.csv | awk '{print $2 ":" $3 "-" $3}' > query.txt
 
-## RNA Reads Parentaging and Quantification
+### RNA Reads Parentaging and Quantification
 
 This process is to quantify RNA reads based on their parental origin and can be done by invoking bashrun.sh.
 Command example:
@@ -132,7 +136,7 @@ The script below will require igvtools.jar from IGV and need to be called using 
 		echo $OUTTEXT >> $4
 	done
 
-## Genomic Imprinting Working Table Generation
+### Genomic Imprinting Working Table Generation
 
 This process is needed to create a useable calculation table needed for the next process and can be done by invoking fixedsnptest.R and stattest.R.
 This process is initiated using:
@@ -150,7 +154,7 @@ Hatorangan, M. R. et al. (2016) ‘Rapid Evolution of Genomic Imprinting in Two 
 Lafon-Placette, C. et al. (2018) ‘Paternally expressed imprinted genes associate with hybridization barriers in Capsella’, Nature Plants. Nature Publishing Group, 4(6), pp. 352–357. doi: 10.1038/s41477-018-0161-6. https://doi.org/10.1038/s41477-018-0161-6
 
 
-## Genomic Imprinting Consistency Test
+### Genomic Imprinting Consistency Test
 
 This is the final step in imprintia.sh. Additional step such as generating a white list or filtering contamination can be added after this. Consistency step is used to test imprinting in two RNA-seq input library. For example, inconsistent imprinting occured if one gene was found to be maternally imprinted in AxB.bam library but had not enough evidence of similar imprinting in the BxA.bam. This step can be done by invoking filteringimp.R.
 
@@ -158,9 +162,10 @@ Example:
 
 	Rscript filteringimp.R -a ~/git/imprintia/rna/AxBdet.csv -b ~/git/imprintia/rna/BxAdet.csv -c ./result/compiled.csv -r ./result/raw.csv -o ./result/summary.csv
 
-# Additional Step
 
-## Removal of Contamination 
+## Additional Step
+
+### Removal of Contamination 
 
 This additional step is added to provide a flexible filter of imprinted genes. For example, this step is needed to remove known contamination from RNA expressed in maternal specific tissue. A script, newsummary.R is provided as a stand alone script outside the imprintia.sh.
 
@@ -183,7 +188,7 @@ Give you:
 	
 Feel free to drop me some email for further questions.
 
-## Generating Whitelist
+### Generating Whitelist
 
 For a detailed process of generating whitelist.csv, please refer to section methods in the cited paper and this step need to be adjusted based on user's requirement instead of mandatory.
 
